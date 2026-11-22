@@ -154,7 +154,9 @@ Check `robots.txt` for these AI crawlers:
 |---------|-------|---------|
 | GPTBot | OpenAI | Model training crawler, not ChatGPT Search |
 | OAI-SearchBot | OpenAI | ChatGPT Search discovery |
-| ChatGPT-User | OpenAI | User-triggered page retrieval |\n| Claude-SearchBot | Anthropic | Claude search retrieval |\n| Claude-User | Anthropic | User-triggered retrieval |
+| ChatGPT-User | OpenAI | User-triggered page retrieval |
+| Claude-SearchBot | Anthropic | Claude search retrieval |
+| Claude-User | Anthropic | User-triggered retrieval |
 | ClaudeBot | Anthropic | Training crawler, not Claude Search |
 | PerplexityBot | Perplexity | Perplexity AI search |
 | CCBot | Common Crawl | Training data (often blocked) |
