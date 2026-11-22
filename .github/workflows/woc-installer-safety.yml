@@ -1,0 +1,37 @@
+name: Legacy installer safety checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "install.sh"
+      - ".github/workflows/woc-installer-safety.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  installer-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Check shell syntax
+        run: bash -n install.sh
+      - name: Reject legacy default without side effects
+        run: |
+          temp_home=$(mktemp -d)
+          if HOME="$temp_home" bash install.sh >"$RUNNER_TEMP/installer-log" 2>&1; then
+            echo "Installer unexpectedly succeeded with legacy default"; exit 1
+          fi
+          grep -q "legacy" "$RUNNER_TEMP/installer-log"
+          test -z "$(ls -A "$temp_home")"
+      - name: Reject mutable main ref without side effects
+        run: |
+          temp_home=$(mktemp -d)
+          if HOME="$temp_home" CLAUDE_SEO_TAG=main bash install.sh >"$RUNNER_TEMP/installer-log-main" 2>&1; then
+            echo "Installer unexpectedly accepted mutable main"; exit 1
+          fi
+          grep -q "mutable" "$RUNNER_TEMP/installer-log-main"
+          test -z "$(ls -A "$temp_home")"
