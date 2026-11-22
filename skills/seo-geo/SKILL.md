@@ -152,17 +152,19 @@ Check `robots.txt` for these AI crawlers:
 
 | Crawler | Owner | Purpose |
 |---------|-------|---------|
-| GPTBot | OpenAI | ChatGPT web search |
-| OAI-SearchBot | OpenAI | OpenAI search features |
-| ChatGPT-User | OpenAI | ChatGPT browsing |
-| ClaudeBot | Anthropic | Claude web features |
+| GPTBot | OpenAI | Model training crawler, not ChatGPT Search |
+| OAI-SearchBot | OpenAI | ChatGPT Search discovery |
+| ChatGPT-User | OpenAI | User-triggered page retrieval |
+| Claude-SearchBot | Anthropic | Claude search retrieval |
+| Claude-User | Anthropic | User-triggered retrieval |
+| ClaudeBot | Anthropic | Training crawler, not Claude Search |
 | PerplexityBot | Perplexity | Perplexity AI search |
 | CCBot | Common Crawl | Training data (often blocked) |
 | anthropic-ai | Anthropic | Claude training |
 | Bytespider | ByteDance | TikTok/Douyin AI |
 | cohere-ai | Cohere | Cohere models |
 
-**Recommendation:** Allow GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot for AI search visibility. Block CCBot and training crawlers if desired.
+**Recommendation:** Assess search access separately from model-training permissions. For ChatGPT Search review `OAI-SearchBot`; for Claude Search review `Claude-SearchBot`. `GPTBot` and `ClaudeBot` are training crawlers and need not be allowed solely for search visibility. Verify live `robots.txt`, CDN/WAF access, site content, and current official vendor guidance before changing any crawler rules. Neither crawler access nor `llms.txt` guarantees citations or recommendations.
 
 ---
 
