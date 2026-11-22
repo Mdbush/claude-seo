@@ -1,0 +1,41 @@
+name: Check AI crawler guidance (static only)
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "skills/seo-geo/SKILL.md"
+      - ".github/workflows/woc-crawler-guidance-review.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  crawler-guidance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Validate Markdown table and search/training separation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path("skills/seo-geo/SKILL.md").read_text()
+          assert "\\n|" not in text, "Literal backslash-n in Markdown table"
+          required = {
+            "| GPTBot | OpenAI | Model training crawler",
+            "| OAI-SearchBot | OpenAI | ChatGPT Search discovery",
+            "| ClaudeBot | Anthropic | Training crawler",
+            "| Claude-SearchBot | Anthropic | Claude search retrieval",
+            "| Claude-User | Anthropic | User-triggered retrieval",
+            "Assess search access separately from model-training permissions",
+          }
+          missing = [line for line in required if line not in text]
+          if missing:
+              raise SystemExit("Missing guidance: " + ", ".join(missing))
+          for line in text.splitlines():
+              if line.startswith("|") and "Claude" in line and "|" not in line[1:]:
+                  raise SystemExit("Malformed Markdown table line")
+          print("Crawler classification static checks passed; no scripts executed")
+          PY
