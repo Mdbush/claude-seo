@@ -14,6 +14,19 @@ main() {
     # Override: CLAUDE_SEO_TAG=main bash install.sh
     REPO_TAG="${CLAUDE_SEO_TAG:-v2.2.0}"
 
+    # Fail closed for a legacy release and mutable branch refs. Explicit
+    # override is intentionally noisy; it does not assert these are safe.
+    if [ "${REPO_TAG}" = "main" ] || [ "${REPO_TAG}" = "master" ]; then
+        echo "✗ Refusing installation from an unpinned, mutable branch." >&2
+        exit 1
+    fi
+    if [ "${REPO_TAG}" = "v2.2.0" ] && [ "${CLAUDE_SEO_ALLOW_LEGACY_INSTALL:-0}" != "1" ]; then
+        echo "✗ The default v2.2.0 release is legacy. Review a patched release and its dependencies first." >&2
+        echo "  Override for explicitly accepted legacy risk: CLAUDE_SEO_ALLOW_LEGACY_INSTALL=1" >&2
+        exit 1
+    fi
+
+
     echo "════════════════════════════════════════"
     echo "║   Claude SEO - Installer             ║"
     echo "║   Claude Code SEO Skill              ║"
